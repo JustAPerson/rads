@@ -1,0 +1,7 @@
+[package]
+name = "rads"
+version = "0.1.0"
+authors = ["Jason Priest <jpriest@mit.edu>"]
+
+[dependencies]
+rand = "0.3"
