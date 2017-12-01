@@ -33,6 +33,7 @@ fn partition<T: Copy+Ord>(array: &mut [T], lo: usize, hi: usize) -> usize {
 mod test {
     use super::*;
     use test::Bencher;
+    use sort::test::*;
 
     #[test]
     fn correct() {
@@ -46,12 +47,15 @@ mod test {
         assert!(l == qsorted);
     }
 
-    #[bench]
-    fn speed(b: &mut Bencher) {
-        use sort::test::generate_array;
-        b.iter(|| {
-            let mut array = generate_array();
-            quick_sort(&mut *array)
-        })
+    macro_rules! bench {
+        ($name:ident, $array:expr) => {
+            #[bench] fn $name (b: &mut Bencher) {
+                b.iter(|| quick_sort(&mut *$array));
+            }
+        }
     }
+
+    bench!(bench_s, generate_array_small());
+    bench!(bench_m, generate_array_medium());
+    bench!(bench_l, generate_array_large());
 }

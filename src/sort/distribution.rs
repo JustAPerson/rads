@@ -30,6 +30,7 @@ fn external_distribution_sort<T: Clone+Ord>(array: &[T]) -> Vec<T> {
 mod test {
     use super::*;
     use test::Bencher;
+    use sort::test::*;
 
     #[test]
     fn correct() {
@@ -42,12 +43,15 @@ mod test {
         assert!(l == dsorted);
     }
 
-    #[bench]
-    fn speed(b: &mut Bencher) {
-        use sort::test::generate_array;
-        b.iter(|| {
-            let array = generate_array();
-            let _ = external_distribution_sort(&*array);
-        })
+    macro_rules! bench {
+        ($name:ident, $array:expr) => {
+            #[bench] fn $name (b: &mut Bencher) {
+                b.iter(|| external_distribution_sort(&*$array));
+            }
+        }
     }
+
+    bench!(bench_s, generate_array_small());
+    bench!(bench_m, generate_array_medium());
+    bench!(bench_l, generate_array_large());
 }
