@@ -63,7 +63,7 @@ impl<K: Ord, V> Iacono<K, V> {
 
     fn shift_multi(&mut self, max: usize) {
         for index in 0..max {
-            if self.buckets[index].tree.len() <= (1 << index) {
+            if self.buckets[index].tree.len() <= (1 << (1 << index)) {
                 break
             }
             self.shift_single(index)
@@ -185,11 +185,11 @@ mod test {
     #[test]
     fn test_iacono_growth() {
         let mut t: Iacono<usize, ()> = Iacono::new();
-        for i in 0..512 {
+        for i in 0..(1 << 16) {
             t.insert(i, ());
         }
 
         let buckets = t.buckets.iter().map(|b| b.tree.len()).collect::<Vec<_>>();
-        assert_eq!(buckets, [2, 2, 4, 8, 16, 32, 64, 128, 256]);
+        assert_eq!(buckets, [3, 4, 16, 256, 65257]);
     }
 }
